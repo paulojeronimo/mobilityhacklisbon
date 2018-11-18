@@ -1,0 +1,62 @@
+#!/bin/bash
+set +x
+set -e                                                                                                                                                                                                                                     
+
+BASE_DIR=`cd $(dirname "$0")`
+
+cd "$BASE_DIR"
+
+log=eth.log                                                                                                                                                                                                                                
+web3j_version=3.3.1
+web3j=web3j-$web3j_version
+contract=../../eth-blockchain/contracts/Vehicle.sol                                                  
+build=build/solidity                                 
+src=src/main/java                                                                                    
+
+check() {
+  which $1 &> /dev/null || { echo "You must install $1"; exit 1; }
+}
+
+check geth                                                                                                                                                                                                                                 
+check solc
+
+cd "$BASE_DIR"
+
+case "$1" in
+  init)
+    rm -rf blockchain/geth
+    geth --datadir blockchain init genesis.json
+    ;;    
+  console)
+    geth  --networkid 1234 \
+          --nodiscover \
+          --datadir blockchain \
+          --unlock 0 \
+          --password blockchain/passwords.txt \
+          --rpc \
+          --rpcaddr localhost \
+          --rpcport 8545 \
+          --rpccorsdomain "*" \
+          console 2> eth.log
+    ;;    
+  attach)
+    geth --datadir blockchain attach blockchain/geth.ipc
+    ;;    
+  java)
+    rm -rf $build
+    mkdir $build
+    solc $contract --overwrite --bin --abi -o $build
+    [ -f "$web3j.tar" ] || wget -c https://github.com/web3j/web3j/releases/download/v$web3j_version/$web3j.tar
+    [ -d "$web3j" ] || tar xvf $web3j.tar
+
+    # version 4.0.0...
+    #./$web3j/bin/web3j solidity generate -a $build/Vehicle.abi -b $build/Vehicle.bin -p com.mercedes.ecu.generated -o $src
+
+    # version 3.x.x
+    ./$web3j/bin/web3j solidity generate $build/Vehicle.bin $build/Vehicle.abi -p com.mercedes.ecu.generated -o $src
+  ;;
+  *)
+    echo "Invalid option: $1"
+    exit 1
+    ;;
+esac

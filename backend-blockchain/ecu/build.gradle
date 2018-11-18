@@ -1,0 +1,78 @@
+buildscript {
+	ext {
+		kotlinVersion = '1.2.71'
+		springBootVersion = '2.1.0.RELEASE'
+		web3j = '1.6.0'
+		klintVersion = '0.28.0'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		classpath("org.web3j:web3j-gradle-plugin:0.1.6")
+	}
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+
+group = 'com.mercedes'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+compileKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+	}
+}
+compileTestKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "1.8"
+	}
+}
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+task downloadDependenciesForDocker(type: Copy) {
+	subprojects.each {
+		from sourceSets.main.runtimeClasspath
+		from sourceSets.test.runtimeClasspath
+		into File.createTempDir().absolutePath
+	}
+}
+
+configurations {
+	ktlint
+}
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.web3j:web3j-spring-boot-starter:${web3j}")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	ktlint "com.github.shyiko:ktlint:${klintVersion}"
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+	description = "Check Kotlin code style."
+	main = "com.github.shyiko.ktlint.Main"
+	classpath = configurations.ktlint
+	args "*/src/**/*.kt"
+}
+
+check.dependsOn ktlint

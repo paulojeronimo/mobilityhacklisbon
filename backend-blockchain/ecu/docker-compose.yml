@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/test
+    depends_on:
+    - mongodb
+    command: /app/gradlew clean build test
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+    - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/dev
+    depends_on:
+    - mongodb
+    - ganache
+    volumes:
+    - .:/app
+    ports:
+    - "8080:8080"
+    command: /app/gradlew bootRun
+
+  mongodb: &mongo-dev
+    image: mongo:3.2
+    command: "--smallfiles"
+    ports:
+    - 27017:27017
+
+  ganache:
+    image: trufflesuite/ganache-cli
+    command: '--account="0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef,1000000000000000000000000000000000000000"'
+    ports:
+    - "8545:8545"

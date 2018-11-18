@@ -1,0 +1,91 @@
+$font-size: 14px;
+html {
+  background: url('/static/eq-splashscreen-mq2.jpg') center center;
+}
+body {
+  font-size: $font-size;
+  background-color: transparent;
+}
+h1 {
+  color: #3be8b0;
+}
+h2 {
+  text-transform: uppercase;
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.btn {
+  text-transform: uppercase;
+  font-size: 14px;
+  cursor: hand;
+  cursor: pointer;
+}
+
+.logo-container{
+  border-bottom: 1px solid #fff;
+  margin-bottom: 20px;
+}
+.logo {
+  background: url('/static/mb-star.svg') no-repeat 13px 20px;
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+}
+
+.brand {
+  width: 200px;
+  height: 100px;
+  display: inline-block;
+  background: url('/static/mb-wordmark.svg') no-repeat 0 40px;
+}
+
+.reading-header .badge {
+  font-size: 18px;
+  padding: 3px 18px 5px 18px;
+  margin-top: 5px;
+}
+.index {
+  .actions {
+    text-align: right;
+    button {
+      width: 100px;
+      height: 40px;
+    }
+    .readings {
+      width: 200px;
+      margin-right: 10px;
+    }
+  }
+}
+.btn.readings {
+  font-size: 14px;
+}
+.readings {
+  color: #fff;
+  font-size: 18px;
+}
+
+@font-face {
+  font-family: 'DaimlerCS';
+  font-style: normal;
+  font-weight: normal;
+  src: local('DaimlerCS'), url('/static/DaimlerCS-Regular.woff2') format('woff2')
+}
+@font-face {
+  font-family: 'DaimlerCS';
+  font-style: normal;
+  font-weight: 400;
+  src: local('DaimlerCS'), url('/static/DaimlerCS-Demi.woff2') format('woff2')
+}
+@font-face {
+  font-family: 'DaimlerCS';
+  font-style: normal;
+  font-weight: bold;
+  src: local('DaimlerCS'), url('/static/DaimlerCS-Bold.woff2') format('woff2')
+}
+body {
+  font-family: 'DaimlerCS';
+}
+

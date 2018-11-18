@@ -1,0 +1,32 @@
+= Ethereum scripts
+
+Prerequisites:
+
+----
+$ curl -O https://github.com/web3j/web3j/releases/download/v4.0.0-alpha-1/web3j-4.0.0-alpha-1.tar
+$ tar xvf web3j-4.0.0-alpha-1.tar
+----
+
+Create the private blockchain:
+
+----
+$ ./eth init
+----
+
+Start the private blockchain:
+
+----
+$ ./eth console
+----
+
+Attach to the private blockchain:
+
+----
+$ ./eth attach
+----
+
+Generate the Java code (using web3j):
+
+----
+$ ./eth java
+----
